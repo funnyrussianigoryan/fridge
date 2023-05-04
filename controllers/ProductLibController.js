@@ -28,33 +28,48 @@ export const remove = async (req, res) => {
   try {
     const productLibId = req.params.id;
 
-    ProductLibModel.findOneAndDelete(
-      {
-        _id: productLibId,
-      },
-      (err, doc) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).json({
-            message: "Не удалось удалить библиотеку продуктов",
-          });
-        }
+    const doc = await ProductLibModel.findOneAndDelete({
+      _id: productLibId,
+      user: req.userId,
+    });
 
-        if (!doc) {
-          return res.status(404).json({
-            message: "Не удалось найти библиотеку продуктов",
-          });
-        }
+    if (!doc) {
+      return res.status(404).json({
+        message: "Библиотека продуктов не найдена",
+      });
+    }
 
-        res.json({
-          success: true,
-        });
-      }
-    );
+    res.json({
+      success: true,
+      ...doc,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Не удалось удалить получить библиотеку продуктов",
+      message: "Не удалось удалить библиотеку продуктов",
+    });
+  }
+};
+
+export const getOne = async (req, res) => {
+  try {
+    const productLibId = req.params.id;
+
+    const doc = await ProductLibModel.findOne({
+      _id: productLibId,
+    });
+
+    if (!doc) {
+      return res.status(404).json({
+        message: "Библиотека продуктов не найдена",
+      });
+    }
+
+    res.json(doc);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Не удалось удалить библиотеку продуктов",
     });
   }
 };

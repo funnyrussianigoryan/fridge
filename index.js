@@ -23,7 +23,8 @@ app.post("/auth/login", loginRegistration, UserController.login);
 app.get("/auth/me", checkAuth, UserController.getMe);
 
 app.post("/productlib", checkAuth, ProductLibController.create);
-app.delete("/productlib:id", checkAuth, ProductLibController.remove);
+app.delete("/productlib/:id", checkAuth, ProductLibController.remove);
+app.get("/productlib/:id", checkAuth, ProductLibController.getOne);
 
 app.listen(4444, (err) => {
   if (err) {
